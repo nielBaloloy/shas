@@ -19,45 +19,70 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      text-align: center;
     }
     h1 {
       margin: 20px;
       color: #d63384;
       font-size: 2.5rem;
     }
+    h2 {
+      font-size: 1.5rem;
+      color: #a14ac5;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
     #game-container {
       position: relative;
       width: 100vw;
       height: 80vh;
+      pointer-events: none;
     }
+
     .heart {
       width: 100px;
       height: 100px;
       background: url('https://pngfre.com/wp-content/uploads/heart-16-2-300x263.png') no-repeat center/contain;
       position: absolute;
       cursor: pointer;
-      animation: float 25s linear infinite;
+      animation: float 20s linear;
     }
+
     @keyframes float {
       0% {
         transform: translateY(100vh);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
       }
       100% {
-        transform: translateY(-100vh);
+        transform: translateY(-120vh);
+        opacity: 0;
       }
     }
+
     #progress {
       margin: 15px;
       font-size: 1.2rem;
       color: #6f42c1;
     }
+
     #modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.8);
       display: none;
       align-items: center;
       justify-content: center;
@@ -65,14 +90,18 @@
       color: white;
       text-align: center;
       padding: 20px;
+      z-index: 99;
     }
+
     #modal h2 {
       font-size: 2rem;
     }
+
     #modal p {
       font-size: 1.2rem;
       margin-top: 10px;
     }
+
     #love-you-btn {
       margin-top: 20px;
       padding: 10px 20px;
@@ -83,6 +112,7 @@
       font-size: 1.1rem;
       color: #d63384;
     }
+
     audio {
       display: none;
     }
@@ -90,18 +120,18 @@
 </head>
 <body>
   <h1>Catch My Heart 💖</h1>
-  <h2>tap the screen to start</h2>
+  <h2 id="startGame">Tap here to start</h2>
   <div id="progress">Hearts Caught: 0 / 10</div>
 
   <div id="game-container"></div>
 
   <div id="modal">
     <h2>You caught all of me ❤️</h2>
-    <p>You already have my heart. I love you sooo muchhhh! 😘</p>
+    <p>You already have my heart. Youuuu ahhhhh hihih....I love you sooo muchhhh! 😘</p>
     <button id="love-you-btn">I love you too 😚</button>
   </div>
 
-  <audio id="loveSong" src="./Maki - Dilaw  Piano Cover with PIANO SHEET.mp3"></audio>
+  <audio id="loveSong" src="./Maki - Dilaw  Piano Cover with PIANO SHEET.mp3" preload="auto"></audio>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script>
@@ -110,15 +140,17 @@
     const modal = document.getElementById('modal');
     const loveBtn = document.getElementById('love-you-btn');
     const loveSong = document.getElementById('loveSong');
+    const startGame = document.getElementById('startGame');
 
     let caught = 0;
     const totalHearts = 10;
+    let hasStarted = false;
 
     function spawnHeart() {
       const heart = document.createElement('div');
       heart.classList.add('heart');
-      heart.style.left = Math.random() * (window.innerWidth - 50) + 'px';
-      heart.style.top = Math.random() * (window.innerHeight - 100) + 'px';
+      heart.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+      heart.style.top = Math.random() * (window.innerHeight - 150) + 'px';
       heart.title = 'Click me!';
 
       heart.addEventListener('click', () => {
@@ -128,16 +160,27 @@
 
         if (caught === totalHearts) {
           modal.style.display = 'flex';
-          loveSong.play();
         }
       });
 
       gameContainer.appendChild(heart);
     }
 
-    for (let i = 0; i < totalHearts; i++) {
-      spawnHeart();
+    function startGameNow() {
+      if (hasStarted) return;
+      hasStarted = true;
+
+      loveSong.play();
+
+      for (let i = 0; i < totalHearts; i++) {
+        setTimeout(spawnHeart, i * 500); // space out spawning
+      }
+
+      gameContainer.style.pointerEvents = 'auto';
+      startGame.style.display = 'none';
     }
+
+    startGame.addEventListener('click', startGameNow);
 
     loveBtn.addEventListener('click', () => {
       confetti({
