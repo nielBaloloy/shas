@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Do You Love Me?</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #ffe6f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Arial', sans-serif;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #d6336c;
+      margin-bottom: 30px;
+    }
+
+    .button-container {
+      display: flex;
+      gap: 20px;
+      z-index: 1;
+    }
+
+    button {
+      padding: 15px 25px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #yesBtn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    #noBtn {
+      background-color: #dc3545;
+      color: white;
+      position: absolute;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      animation: pop 0.3s ease-in-out;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal img {
+      width: 100%;
+      max-height: 200px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+
+    .modal h2 {
+      color: #e63946;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Do you love me?</h1>
+  <div class="button-container">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+
+  <div class="modal" id="loveModal">
+    <div class="modal-content">
+      <img src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcnNna2ZnanB0dnk4bWF1amJ0bjJqOXU3bGV0OGNjZ3o2ODNiZHI3eiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4N1wOi78ZGzSB6H7vK/giphy.gif" alt="Cute Bear">
+      <h2>I love youuu so mucchhh ❤️</h2>
+      <p>You're the sweetest person ever. Forever and always, it's you. 💖</p>
+    </div>
+  </div>
+
+  <!-- Local Audio File -->
+  <audio id="loveAudio" src="./kentlyricss01_7522465942429879560 (mp3cut.net).mp3"></audio>
+
+  <!-- Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script>
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const modal = document.getElementById('loveModal');
+    const audio = document.getElementById('loveAudio');
+
+    // Position No button initially
+    function centerNoButton() {
+      noBtn.style.left = window.innerWidth / 2 + 70 + 'px';
+      noBtn.style.top = window.innerHeight / 2 + 'px';
+    }
+    centerNoButton();
+
+    // No button evades mouse
+    noBtn.addEventListener('mouseenter', () => {
+      const maxX = window.innerWidth - noBtn.offsetWidth;
+      const maxY = window.innerHeight - noBtn.offsetHeight;
+      const randomX = Math.floor(Math.random() * maxX);
+      const randomY = Math.floor(Math.random() * maxY);
+      noBtn.style.left = randomX + 'px';
+      noBtn.style.top = randomY + 'px';
+    });
+
+    // Yes button logic
+    yesBtn.addEventListener('click', () => {
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 }
+      });
+
+      modal.style.display = 'flex';
+
+      // Play audio
+      audio.play();
+    });
+
+    window.addEventListener('resize', centerNoButton);
+  </script>
+</body>
+</html>
